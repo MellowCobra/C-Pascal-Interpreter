@@ -1,20 +1,27 @@
 #include <iostream>
 #include <string>
+#include "Errors.h"
 
-using std::cout;
+using namespace std;
 
-#include "MathTokens.h"
 #include "Interpreter.h"
 
 int main(int argc, char* argv[]) {
 
-    Token t1(42);
-    Token t2(_PLUS);
-    Token t3(_EOF);
+    string expressionToInterpret = "";
+    cout << "Enter an expression to interpret: ";
+    cin >> expressionToInterpret;
 
-    cout << "t1 is " << t1.stringRepresentation() << "\n";
-    cout << "t2 is " << t2.stringRepresentation() << "\n";
-    cout << "t3 is " << t3.stringRepresentation() << "\n";
+    Interpreter interpreter(expressionToInterpret);
+    int result;
+    try {
+        result = interpreter.expr();
+    } catch (ParsingException &e) {
+        cout << e.what() << "\n";
+        return 1;
+    }
+
+    cout << "result of " << expressionToInterpret << " is " << result << "\n";
 
     return 0;
 }
