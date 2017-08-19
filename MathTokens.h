@@ -13,7 +13,7 @@ using std::string;
 //#define PLUS = "PLUS"
 //#define EOF = "EOF"
 
-enum Type {_INTEGER, _PLUS, _EOF};
+enum Type {_INTEGER, _PLUS, _EOF, _NULL};
 
 class Token {
 
@@ -35,9 +35,10 @@ public:
 
     // Mutators
     void setToken(Type, void*);
+    void setToken(Type);
 
     // Convenience Methods
-    string stringRepresentation();
+    string stringRepresentation() const;
 };
 
 #endif

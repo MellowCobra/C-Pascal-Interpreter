@@ -4,7 +4,7 @@
 #include "MathTokens.h"
 
 Token::Token() {
-    this->setToken(_EOF, (void*)(new string("eof")));
+    this->setToken(_NULL);
 }
 
 Token::Token(Type t, void* v) {
@@ -16,18 +16,7 @@ Token::Token(int v) {
 }
 
 Token::Token(Type t) {
-    this->type = t;
-    switch(this->type) {
-        case _INTEGER:
-            this->value = (void*)(new int(0));
-            break;
-        case _PLUS:
-            this->value = (void*)(new string("plus"));
-            break;
-        case _EOF:
-            this->value = (void*)(new string("eof"));
-            break;
-    }
+    this->setToken(t);
 }
 
 Type Token::getType() {
@@ -51,7 +40,25 @@ void Token::setToken(Type t, void* v) {
     this->value = v;
 }
 
-string Token::stringRepresentation() {
+void Token::setToken(Type t) {
+    this->type = t;
+    switch(this->type) {
+        case _INTEGER:
+            this->value = (void*)(new int(0));
+            break;
+        case _PLUS:
+            this->value = (void*)(new string("plus"));
+            break;
+        case _EOF:
+            this->value = (void*)(new string("eof"));
+            break;
+        case _NULL:
+            this->value = (void*)(new int(0));
+            break;
+    }
+}
+
+string Token::stringRepresentation() const {
     string sType;
     string sVal;
 
@@ -68,6 +75,9 @@ string Token::stringRepresentation() {
             sType = "_EOF";
             sVal = *((string*) this->value);
             break;
+        case _NULL:
+            sType = "_NULL";
+            sVal = std::to_string(*((int*) this->value));
     }
     return "{" + sType + ": " + sVal + "}";
 }
