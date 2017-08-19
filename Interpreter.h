@@ -7,6 +7,7 @@
 
 class Interpreter {
 private:
+    int line;
     int position;
     string text;
     Token currentToken;
@@ -15,6 +16,8 @@ public:
     Interpreter(string);
 
     Token getNextToken();
+    void eat(Token);
+    int expr();
 };
 
 #endif

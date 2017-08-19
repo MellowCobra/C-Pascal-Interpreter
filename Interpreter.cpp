@@ -1,20 +1,21 @@
 // Interprets simple addition using MathTokens
 // Copyright (c) 2017 Grayson Dubois @mellowcobra
 
-#include "Interpreter.h"
 #include <string>
+#include "Interpreter.h"
+#include "Errors.h"
 
-using std::string;
-using std::to_string;
+#include <iostream>
 
-Interpreter::Interpreter(string t) {
-    this->text = t;
-}
+using namespace std;
+
+Interpreter::Interpreter(string t) 
+    : text(t), line(0), position(0), currentToken(_NULL) {}
 
 Token Interpreter::getNextToken() {
 
     // If at the end of the text, return EOF Token
-    if (this->position > this->text.length()) {
+    if (this->position >= this->text.length()) {
         return Token(_EOF);
     }
 
@@ -23,7 +24,7 @@ Token Interpreter::getNextToken() {
 
     // Check to see if the current character is a number or a plus sign
     if (isdigit(currentChar)) {
-        Token t( (int(currentChar)) );
+        Token t( (atoi(&currentChar)) );
         this->position++;
         return t;
     } else if (currentChar == '+') {
@@ -32,5 +33,35 @@ Token Interpreter::getNextToken() {
         return t;
     }
 
-    throw ("Unrecognized token " + to_string(currentChar) + " at position " + to_string(this->position));
+    throw UnknownTokenException(this->line, this->position, currentChar);
+}
+
+void Interpreter::eat(Token t) {
+    // Compare the current token type to the passed token type,
+    // if they match, 'eat' the current token and assign the
+    // next token to the current token
+    if (this->currentToken.getType() == t.getType()) {
+        this->currentToken = this->getNextToken();
+    } else {
+        throw UnmatchedTokenException(this->line, this->position, this->currentToken, t);
+    }
+}
+
+int Interpreter::expr() {
+    // expr -> INTEGER PLUS INTEGER
+    this->currentToken = this->getNextToken();
+
+    // Set the left side to current token and eat it
+    Token left = this->currentToken;
+    this->eat(_INTEGER);
+
+    // We expect the next token to be a '+' token
+    Token op = this->currentToken;
+    this->eat(_PLUS);
+
+    // We expect the next token to be an integer
+    Token right = this->currentToken;
+    this->eat(_INTEGER);
+
+    return left.getIntValue() + right.getIntValue();
 }
