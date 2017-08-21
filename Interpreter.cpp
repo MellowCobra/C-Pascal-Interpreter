@@ -36,11 +36,11 @@ Token Interpreter::getNextToken() {
     throw UnknownTokenException(this->line, this->position, currentChar);
 }
 
-void Interpreter::eat(Token t) {
+void Interpreter::eat(Type t) {
     // Compare the current token type to the passed token type,
     // if they match, 'eat' the current token and assign the
     // next token to the current token
-    if (this->currentToken.getType() == t.getType()) {
+    if (this->currentToken.getType() == t) {
         this->currentToken = this->getNextToken();
     } else {
         throw UnmatchedTokenException(this->line, this->position, this->currentToken, t);

@@ -32,9 +32,9 @@ public:
 class UnmatchedTokenException: public ParsingException {
 private:
     Token currentToken;
-    Token expectedToken;
+    Type expectedType;
 public:
-    UnmatchedTokenException(const int&, const int&, Token, Token);
+    UnmatchedTokenException(const int&, const int&, Token, Type);
 
     virtual const char* what() const throw();
 };
