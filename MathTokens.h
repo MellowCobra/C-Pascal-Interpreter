@@ -13,7 +13,21 @@ using std::string;
 //#define PLUS = "PLUS"
 //#define EOF = "EOF"
 
-enum Type {_INTEGER, _PLUS, _EOF, _NULL};
+enum Type {
+    _INTEGER,
+    _PLUS,
+    _MINUS,
+    _EOF,
+    _NULL
+};
+
+static string TypeName[] = {
+    "_INTEGER",
+    "_PLUS",
+    "_MINUS",
+    "_EOF",
+    "_NULL"
+};
 
 class Token {
 

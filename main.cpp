@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include "Errors.h"
 
@@ -8,20 +9,24 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
 
-    string expressionToInterpret = "";
-    cout << "Enter an expression to interpret: ";
-    cin >> expressionToInterpret;
+    string filename;
+    cout << "Enter filename: ";
+    cin >> filename;
 
-    Interpreter interpreter(expressionToInterpret);
-    int result;
-    try {
-        result = interpreter.expr();
-    } catch (ParsingException &e) {
-        cout << e.what() << "\n";
-        return 1;
+    ifstream infile(filename);
+
+    for (string line; getline(infile, line);) {
+        Interpreter interpreter(line);
+        int result;
+        try {
+            result = interpreter.expr();
+        } catch (ParsingException &e) {
+            cout << e.what() << "\n";
+            return 1;
+        }
+
+        cout << "result of " << line << " is " << result << "\n";
     }
-
-    cout << "result of " << expressionToInterpret << " is " << result << "\n";
 
     return 0;
 }

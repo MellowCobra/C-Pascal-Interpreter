@@ -24,12 +24,12 @@ const char* UnknownTokenException::what() const throw() {
 }
 
 
-UnmatchedTokenException::UnmatchedTokenException(const int& lin, const int& loc, Token t1, Token t2)
-    : ParsingException(lin, loc), currentToken(t1), expectedToken(t2) {}
+UnmatchedTokenException::UnmatchedTokenException(const int& lin, const int& loc, Token t1, Type t2)
+    : ParsingException(lin, loc), currentToken(t1), expectedType(t2) {}
 
 const char* UnmatchedTokenException::what() const throw() {
     return (string(ParsingException::what()) +
-        ": Unmatched Token - expected " + this->expectedToken.stringRepresentation() + ", but found " + 
+        ": Unmatched Token - expected " + TypeName[this->expectedType] + ", but found " + 
         this->currentToken.stringRepresentation() + " instead"
     ).c_str();
 }

@@ -47,7 +47,10 @@ void Token::setToken(Type t) {
             this->value = (void*)(new int(0));
             break;
         case _PLUS:
-            this->value = (void*)(new string("plus"));
+            this->value = (void*)(new string("+"));
+            break;
+        case _MINUS:
+            this->value = (void*)(new string("-"));
             break;
         case _EOF:
             this->value = (void*)(new string("eof"));
@@ -71,6 +74,9 @@ string Token::stringRepresentation() const {
             sType = "_PLUS";
             sVal = *((string*) this->value);
             break;
+        case _MINUS:
+            sType = "_MINUS";
+            sVal = *((string*) this->value);
         case _EOF:
             sType = "_EOF";
             sVal = *((string*) this->value);

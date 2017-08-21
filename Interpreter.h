@@ -10,13 +10,18 @@ private:
     int line;
     int position;
     string text;
+    char currentChar;
     Token currentToken;
 
 public:
     Interpreter(string);
 
+    void advance();
+    void skipWhitespace();
+    int integer();
+
     Token getNextToken();
-    void eat(Token);
+    void eat(Type);
     int expr();
 };
 
