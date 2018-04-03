@@ -8,6 +8,8 @@ Recognizes the following Token Types:
 * _INTEGER - Integer values
 * _PLUS    - The plus sign '+'
 * _MINUS   - The minus sign '-'
+* _MUL     - The multiplication sign '*'
+* _DIV     - The division sign '/'
 * _EOF     - Signifies the end of file
 * _NULL    - An empty token which represents null values
 

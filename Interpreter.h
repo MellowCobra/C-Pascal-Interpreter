@@ -23,6 +23,8 @@ public:
     Token getNextToken();
     void eat(Type);
     int expr();
+    int term();
+    int factor();
 };
 
 #endif

@@ -17,6 +17,8 @@ enum Type {
     _INTEGER,
     _PLUS,
     _MINUS,
+    _MUL,
+    _DIV,
     _EOF,
     _NULL
 };
@@ -25,6 +27,8 @@ static string TypeName[] = {
     "_INTEGER",
     "_PLUS",
     "_MINUS",
+    "_MUL",
+    "_DIV",
     "_EOF",
     "_NULL"
 };

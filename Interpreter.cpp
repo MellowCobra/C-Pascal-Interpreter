@@ -10,6 +10,15 @@
 
 using namespace std;
 
+template <class T>
+bool contains(T list[], T current, int max) {
+    for (int i = 0; i < max; i++) {
+        if (list[i].getType() == current.getType()) {
+            return true;
+        }
+    }
+    return false;
+}
 
 #define NULLCHAR '\0'
 
@@ -69,6 +78,12 @@ Token Interpreter::getNextToken() {
         } else if (this->currentChar == '-') {
             this->advance();
             return Token(_MINUS);
+        } else if (this->currentChar == '*') {
+            this->advance();
+            return Token(_MUL);
+        } else if (this->currentChar == '/') {
+            this->advance();
+            return Token(_DIV);
         } else {
             throw UnknownTokenException(this->line, this->position, this->currentChar);
         }
@@ -90,33 +105,58 @@ void Interpreter::eat(Type t) {
 
 // Parser / Interpreter
 int Interpreter::expr() {
-    // expr -> INTEGER PLUS INTEGER
-    // expr -> INTEGER MINUS INTEGER
+    // expr -> INTEGER ((PLUS, MINUS, MUL, DIV) INTEGER)*
+    // expr -> term ((PLUS|MINUS) term)*
+    // term -> INTEGER ((MUL|DIV) INTEGER)*
     this->currentToken = this->getNextToken();
 
-    // Set the left side to current token and eat it
-    Token left = this->currentToken;
-    this->eat(_INTEGER);
+    // Set the result to the value of the first token
+    int result = this->term();
 
-    // We expect the next token to be a '+' token
-    Token op = this->currentToken;
-    if (op.getType() == _PLUS) {
-        this->eat(_PLUS);
-    } else if (op.getType() == _MINUS) {
-        this->eat(_MINUS);
-    } else {
-        throw UnmatchedTokenException(this->line, this->position, this->currentToken, _PLUS);
+    // Loop for each time there is an arithmetic operator
+    while (this->currentToken.getType() == _PLUS || this->currentToken.getType() == _MINUS) {
+        Token t = this->currentToken;
+
+        if (t.getType() == _PLUS) {
+            this->eat(_PLUS);
+            result += this->term();
+        } else if (t.getType() == _MINUS) {
+            this->eat(_MINUS);
+            result -= this->term();
+        } else {
+            throw UnmatchedTokenException(this->line, this->position, this->currentToken, _PLUS);
+        }
     }
 
-    // We expect the next token to be an integer
-    Token right = this->currentToken;
-    this->eat(_INTEGER);
-
-    int result = 0;
-    if (op.getType() == _PLUS) {
-        result = left.getIntValue() + right.getIntValue();
-    } else if (op.getType() == _MINUS) {
-        result = left.getIntValue() - right.getIntValue();
-    }
     return result;
+}
+
+// Term function calculates multiplication/division terms
+int Interpreter::term() {
+    // term -> factor ((MUL|DIV) factor)*
+
+    int result = this->factor();
+    while (this->currentToken.getType() == _MUL || this->currentToken.getType() == _DIV) {
+        Token t = this->currentToken;
+
+        if (t.getType() == _MUL) {
+            this->eat(_MUL);
+            result *= this->factor();
+        } else if (t.getType() == _DIV) {
+            this->eat(_DIV);
+            result /= this->factor();
+        } else {
+            throw UnmatchedTokenException(this->line, this->position, this->currentToken, _MUL);
+        }
+    }
+
+    return result;
+}
+
+// Factor function consumes integers
+int Interpreter::factor() {
+    // factor -> INTEGER
+    Token t = this->currentToken;
+    this->eat(_INTEGER);
+    return t.getIntValue();
 }
